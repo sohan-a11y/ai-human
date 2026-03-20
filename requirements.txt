@@ -1,0 +1,119 @@
+# ============================================================
+#  AI HUMAN — Python Dependencies
+#  Install: pip install -r requirements.txt
+#  For optional packages, uncomment what you need.
+# ============================================================
+
+# ── LLM Providers ────────────────────────────────────────────
+anthropic>=0.30.0
+openai>=1.35.0
+
+# ── Config ───────────────────────────────────────────────────
+pydantic>=2.7.0
+pydantic-settings>=2.3.0
+python-dotenv>=1.0.1
+
+# ── Screen Perception ────────────────────────────────────────
+mss>=9.0.2
+Pillow>=10.3.0
+pytesseract>=0.3.13        # optional OCR fallback (needs Tesseract binary)
+pywin32>=306               # Windows window tracking + UIA support
+
+# ── UI Automation (precise element detection) ────────────────
+uiautomation>=2.0.18       # Windows Accessibility API — exact button positions
+
+# ── Action Execution ─────────────────────────────────────────
+pyautogui>=0.9.54
+pyperclip>=1.9.0
+
+# ── Web Automation (reliable browser control) ────────────────
+playwright>=1.44.0         # after install: playwright install chromium
+websockets>=12.0           # browser extension WebSocket bridge
+
+# ── Audio: Text-to-Speech ────────────────────────────────────
+pyttsx3>=2.90              # offline TTS, no API key needed
+
+# ── Audio: Speech-to-Text ────────────────────────────────────
+faster-whisper>=1.0.0      # offline whisper (recommended)
+sounddevice>=0.4.6
+PyAudio>=0.2.14            # microphone input
+SpeechRecognition>=3.10.0  # fallback Google STT
+
+# ── Wake Word Detection (choose one) ─────────────────────────
+# openwakeword>=0.6.0      # best accuracy (recommended)
+# vosk>=0.3.45             # alternative offline
+
+# ── Keyboard + Mouse monitoring (stress detection) ───────────
+pynput>=1.7.6
+
+# ── Vector Memory ────────────────────────────────────────────
+chromadb>=0.5.3
+
+# ── Web / Research ───────────────────────────────────────────
+requests>=2.32.0
+beautifulsoup4>=4.12.3
+lxml>=5.2.2
+
+# ── Natural Language Date Parsing ────────────────────────────
+dateparser>=1.2.0          # "tomorrow at 3pm", "next Friday"
+
+# ── Language Detection + Translation ─────────────────────────
+langdetect>=1.0.9          # detect language of text
+deep-translator>=1.11.4    # free Google Translate (online)
+# argostranslate>=1.9.6    # fully offline translation (larger download)
+
+# ── Credential Vault ─────────────────────────────────────────
+cryptography>=42.0.0       # Fernet symmetric encryption for vault
+
+# ── Screen Recording ─────────────────────────────────────────
+opencv-python>=4.9.0       # video writing for screen recorder
+
+# ── System Info ──────────────────────────────────────────────
+psutil>=6.0.0
+
+# ── Logging ──────────────────────────────────────────────────
+loguru>=0.7.2
+
+# ── Utilities ────────────────────────────────────────────────
+tenacity>=8.3.0
+numpy>=1.26.0
+
+# ── Remote control server + Mobile + Peer network ────────────
+fastapi>=0.111.0
+uvicorn>=0.30.0
+
+# ── Document understanding ───────────────────────────────────
+pdfplumber>=0.11.0
+python-docx>=1.1.0
+openpyxl>=3.1.2
+python-pptx>=0.6.23
+
+# ── Scheduled tasks (cron syntax support) ────────────────────
+croniter>=2.0.5
+
+# ── Peer Network Discovery ───────────────────────────────────
+zeroconf>=0.131.0          # mDNS/Bonjour peer discovery
+
+# ── API Integrations ─────────────────────────────────────────
+# google-api-python-client>=2.130.0  # Gmail + Google Calendar
+# google-auth-oauthlib>=1.2.0
+
+# ── Image Generation ─────────────────────────────────────────
+# replicate>=0.28.0        # Replicate.com cloud image gen
+# Stable Diffusion: run Automatic1111 locally (no pip install needed)
+
+# ── Optional: local embeddings ───────────────────────────────
+# sentence-transformers>=3.0.0
+
+# ── Reverse Engineering ───────────────────────────────────────
+# pefile>=2023.2.7          # Windows PE binary parsing
+# r2pipe>=1.9.0             # Radare2 disassembler bridge (needs radare2 installed)
+# retdec-python>=0.13.0    # RetDec decompiler bridge
+
+# ── Audio Analysis (stress / emotion) ────────────────────────
+# librosa>=0.10.2           # voice tone analysis
+
+# ── Minimal install (runs on 4GB RAM, CPU-only) ──────────────
+# Comment out everything above, then:
+# pip install anthropic openai mss Pillow pyautogui requests chromadb
+# fastapi uvicorn psutil loguru python-dotenv pydantic pydantic-settings

@@ -1,0 +1,59 @@
+# Dependencies, Config, and Secrets
+
+- This dossier is resume-safe: live secret values are redacted in previews below.
+
+## Markers and Dependency Files
+- package.json
+
+## Config and Secret File Inventory
+- package.json
+
+## package.json
+- Full path: C:\Users\kalya\Documents\ai human\mobile_app\package.json
+- Size: 1225 bytes
+- Sensitive file name match: False
+```json
+{
+  "name": "ai-human-mobile",
+  "version": "1.0.0",
+  "description": "AI Human Mobile Companion App",
+  "main": "expo/AppEntry.js",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
+    "build:android": "eas build --platform android",
+    "build:ios": "eas build --platform ios"
+  },
+  "dependencies": {
+    "expo": "~50.0.0",
+    "expo-av": "~14.0.0",
+    "expo-camera": "~14.1.0",
+    "expo-file-system": "~16.0.0",
+    "expo-image": "~1.10.0",
+    "expo-notifications": "~0.27.0",
+    "expo-speech": "~11.7.0",
+    "expo-status-bar": "~1.11.1",
+    "react": "18.2.0",
+    "react-native": "0.73.4",
+    "react-native-gesture-handler": "~2.14.0",
+    "react-native-reanimated": "~3.6.2",
+    "react-native-safe-area-context": "4.8.2",
+    "react-native-screens": "~3.29.0",
+    "@react-navigation/native": "^6.1.0",
+    "@react-navigation/bottom-tabs": "^6.5.0",
+    "@react-navigation/stack": "^6.3.0",
+    "react-native-vector-icons": "^10.0.0",
+    "@expo/vector-icons": "^14.0.0",
+    "axios": "^1.6.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.20.0",
+    "@types/react": "~18.2.45",
+    "typescript": "^5.1.3"
+  }
+}
+
+```
+

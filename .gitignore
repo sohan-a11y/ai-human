@@ -1,0 +1,87 @@
+# ── Secrets & credentials ─────────────────────────────────────────────────────
+.env
+.env.local
+.env.*
+!.env.example
+data/vault.enc
+data/vault.salt
+*.key
+*.pem
+*.p12
+
+# ── Agent runtime data (user-specific, not for repo) ─────────────────────────
+data/chroma/
+data/logs/
+data/session_logs/
+data/recordings/
+data/artifacts/
+data/goals.json
+data/restart_signal.json
+data/metrics.jsonl
+data/mobile_notifications.json
+data/learning_log.jsonl
+data/peer_workflows/
+data/vosk_model/
+data/generated_images/
+data/re_reports/
+data/workflows/
+data/schedules.json
+data/known_peers.json
+
+# ── Version snapshots (large, local only) ────────────────────────────────────
+versions/
+
+# ── Docs generated at runtime ─────────────────────────────────────────────────
+docs/AGENT_LOG.md
+docs/KNOWLEDGE_BASE.md
+docs/TOOL_GUIDE.md
+
+# ── Python ────────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+.venv/
+venv/
+env/
+ENV/
+
+# ── IDE ───────────────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# ── Node (mobile app) ─────────────────────────────────────────────────────────
+mobile_app/node_modules/
+mobile_app/.expo/
+mobile_app/dist/
+mobile_app/build/
+mobile_app/android/
+mobile_app/ios/
+
+# ── Test artifacts ────────────────────────────────────────────────────────────
+.pytest_cache/
+.coverage
+htmlcov/
+*.log
+
+# ── Browser extension (generated at runtime) ────────────────────────────────
+browser_extension/
+
+# ── AI-created tools (user-generated, not for repo) ─────────────────────────
+tools/registry/*.py
+!tools/registry/.gitkeep
+
+# ── Temp files ────────────────────────────────────────────────────────────────
+*.tmp
+*.bak
+*.orig
