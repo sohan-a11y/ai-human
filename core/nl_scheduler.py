@@ -177,10 +177,10 @@ class NLScheduler:
             return ParsedSchedule(raw=original, type="interval", interval_seconds=3600)
 
         # ── WEEKDAY SCHEDULE ──────────────────────────────────────────────
-        # "every Monday at 9am", "each Tuesday at 3:30pm"
+        # "every Monday at 9am", "each Tuesday at 3:30pm", "every Friday at noon"
         for day_name, day_num in _WEEKDAY_MAP.items():
             if re.search(rf"\b{day_name}\b", text):
-                time_part = re.search(r"at\s+([\d:apm\s]+(?:am|pm)?)", text)
+                time_part = re.search(r"at\s+([\d:apmnoighdt\s]+(?:am|pm)?)", text)
                 h, mn = (9, 0)
                 if time_part:
                     parsed = _parse_time(time_part.group(1))
@@ -193,7 +193,7 @@ class NLScheduler:
 
         # "every weekday at 6pm" (Mon-Fri)
         if re.search(r"\bweekday\b", text):
-            time_part = re.search(r"at\s+([\d:apm\s]+(?:am|pm)?)", text)
+            time_part = re.search(r"at\s+([\d:apmnoighdt\s]+(?:am|pm)?)", text)
             h, mn = (9, 0)
             if time_part:
                 parsed = _parse_time(time_part.group(1))

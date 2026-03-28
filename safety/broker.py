@@ -50,6 +50,14 @@ class SafetyBroker:
 
     def _show_confirmation(self, action_name: str, args: dict, score: int, reason: str) -> bool:
         """Show a tkinter modal dialog asking user to approve or deny."""
+        import os
+        headless_mode = os.environ.get("AI_HUMAN_HEADLESS_CONFIRM", "").lower()
+        if headless_mode == "allow":
+            log.info(f"Headless mode: auto-approving action '{action_name}' (score {score})")
+            return True
+        if headless_mode == "deny":
+            log.info(f"Headless mode: auto-denying action '{action_name}' (score {score})")
+            return False
         try:
             import tkinter as tk
             from tkinter import messagebox
