@@ -168,8 +168,13 @@ class AgentOrchestrator:
             parts.append(failure_text)
         parts.append(self._tools.describe_all())
 
+        # Soft cap: keep last 40 messages to stay within LLM context limits
+        _MAX_CONTEXT = 40
+        if len(self._context_window) > _MAX_CONTEXT:
+            self._context_window = self._context_window[-_MAX_CONTEXT:]
+
         messages = [system_message(SYSTEM_PROMPT)]
-        messages += self._context_window  # Full history — no truncation
+        messages += self._context_window
         messages.append(text_message("user", "\n\n".join(parts)))
 
         raw = self._llm.generate(messages)

@@ -27,7 +27,6 @@ from __future__ import annotations
 
 import argparse
 import os
-import sys
 
 
 def main():
@@ -294,8 +293,10 @@ def main():
                         print(f"  Heard: {goal_text}")
                         english_goal, _ = lang_support.process_multilingual_goal(goal_text)
                         agent.set_goal(english_goal)
-                except Exception:
-                    pass
+                    else:
+                        print("  Wake word: no speech detected (timeout)")
+                except Exception as e:
+                    print(f"  Wake word STT error: {e}")
             wake = WakeWordDetector(wake_word=args.wake_word)
             wake.start(callback=on_wake_word)
             print(f"  Wake word: listening for '{args.wake_word}'")
@@ -394,8 +395,19 @@ def _run_headless(agent, persistence, scheduler, docs, dashboard, lang_support) 
                     from core.nl_scheduler import NLScheduler
                     nl = NLScheduler()
                     sched = nl.parse(parts[0].strip())
-                    scheduler.add_task(parts[1].strip(), sched)
-                    print(f"  Scheduled: {NLScheduler().describe(sched)}")
+                    goal_str = parts[1].strip()
+                    # Translate ParsedSchedule → Scheduler.add(type, value, goal)
+                    if sched.type == "once" and sched.run_at:
+                        scheduler.add("once", sched.run_at.strftime("%Y-%m-%d %H:%M"), goal_str)
+                    elif sched.type == "daily" and sched.hour is not None:
+                        scheduler.add("every_day", f"{sched.hour:02d}:{sched.minute or 0:02d}", goal_str)
+                    elif sched.type == "interval" and sched.interval_seconds:
+                        scheduler.add("interval", sched.interval_seconds, goal_str)
+                    elif sched.type in ("weekly", "monthly", "cron"):
+                        scheduler.add("cron", sched.to_cron_expression(), goal_str)
+                    else:
+                        scheduler.add("every_day", "09:00", goal_str)
+                    print(f"  Scheduled: {nl.describe(sched)}")
                 else:
                     print("  Format: schedule <when>: <goal>")
             else:

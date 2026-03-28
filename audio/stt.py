@@ -14,11 +14,11 @@ from utils.logger import get_logger
 log = get_logger(__name__)
 
 
-class STT:
+class SpeechToText:
     """
     Listens to the microphone and emits recognized text.
     Usage:
-        stt = STT()
+        stt = SpeechToText()
         stt.start(callback=lambda text: agent.set_goal(text))
         stt.stop()
     """
@@ -56,6 +56,21 @@ class STT:
 
     def stop(self) -> None:
         self._running = False
+
+    def listen_once(self, timeout: int = 10) -> str:
+        """Block until one utterance is captured, then return the text."""
+        result_q: queue.Queue = queue.Queue()
+
+        def _cb(text: str) -> None:
+            result_q.put(text)
+
+        self.start(callback=_cb)
+        try:
+            return result_q.get(timeout=timeout)
+        except queue.Empty:
+            return ""
+        finally:
+            self.stop()
 
     def _listen_loop(self) -> None:
         if self._method == "whisper":

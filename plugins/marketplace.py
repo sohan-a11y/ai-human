@@ -36,7 +36,7 @@ _BLOCKED_STRINGS = {
 }
 _BLOCKED_IMPORTS = {
     "ctypes", "winreg", "subprocess", "socket", "pty", "os",
-    "sys", "shutil", "importlib",
+    "sys", "shutil", "importlib", "pathlib", "glob", "fnmatch",
 }
 
 

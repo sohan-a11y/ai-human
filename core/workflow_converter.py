@@ -8,7 +8,6 @@ This is the self-improvement loop: repetition → automation.
 
 from __future__ import annotations
 
-import hashlib
 import json
 from collections import Counter
 from pathlib import Path
@@ -74,6 +73,10 @@ class WorkflowConverter:
         # Keep only last 100 actions
         if len(self._action_history) > 100:
             self._action_history = self._action_history[-100:]
+        # Cap pattern counter to prevent unbounded growth
+        if len(self._pattern_counts) > 500:
+            top = self._pattern_counts.most_common(100)
+            self._pattern_counts = Counter(dict(top))
         # Look for repeated sequences
         self._detect_patterns()
 
