@@ -350,44 +350,59 @@ def _load_skill_packs() -> None:
     pass
 
 
-def _start_event_printer(bus) -> None:
-    """Background thread that prints agent activity to the terminal."""
-    import threading, time
+def _run_goal_with_feedback(agent, goal: str) -> None:
+    """Set a goal and block, printing state changes until the agent finishes."""
+    import time
+    from core.agent import AgentState
 
-    def _printer():
-        while True:
-            event = bus.consume(timeout=0.1)
+    agent.set_goal(goal)
+    print(f"  >> Goal set. Working...", flush=True)
+
+    last_state = None
+
+    # Subscribe a lightweight listener to the bus to capture action results
+    import threading
+    action_log = []
+
+    def _bus_listener():
+        while agent.goal:  # stop when goal is cleared
+            event = agent._bus.consume(timeout=0.1)
             if event is None:
                 continue
-            t = event.type
-            d = event.data
-            if t == "goal":
-                print(f"\n  [Agent] Goal accepted: {d}")
-                print(f"  [Agent] Thinking...\n")
-            elif t == "state_change":
-                if d in ("PERCEIVING", "THINKING", "ACTING", "LEARNING"):
-                    print(f"  [Agent] {d.lower().capitalize()}...", flush=True)
-            elif t == "thought":
-                # Show a short excerpt of the raw LLM reasoning
-                snippet = str(d)[:120].replace("\n", " ")
-                print(f"  [Thought] {snippet}")
-            elif t == "action":
+            if event.type == "action":
+                d = event.data
                 status = "OK" if d.get("success") else "FAILED"
-                print(f"  [Action] {d.get('name')} -> {status}: {d.get('msg', '')[:80]}")
-            elif t == "done":
-                print(f"\n  [Agent] Goal complete: {d}\n")
-                print("Goal > ", end="", flush=True)
-            elif t == "error":
-                print(f"  [Error] {str(d)[:120]}")
+                action_log.append(f"  [Action] {d.get('name')} -> {status}: {d.get('msg','')[:80]}")
+            elif event.type == "error":
+                action_log.append(f"  [Error]  {str(event.data)[:100]}")
 
-    t = threading.Thread(target=_printer, daemon=True, name="EventPrinter")
-    t.start()
+    listener = threading.Thread(target=_bus_listener, daemon=True, name="HeadlessListener")
+    listener.start()
+
+    try:
+        while agent.goal:
+            state = agent.state.name
+            if state != last_state:
+                print(f"  [{state}]", flush=True)
+                last_state = state
+            # Flush any action logs collected by the listener
+            while action_log:
+                print(action_log.pop(0), flush=True)
+            time.sleep(0.4)
+    except KeyboardInterrupt:
+        agent.set_goal("")
+        print("  Interrupted.")
+        return
+
+    # Flush remaining action logs
+    while action_log:
+        print(action_log.pop(0), flush=True)
+    print("  >> Done.\n", flush=True)
 
 
 def _run_headless(agent, persistence, scheduler, docs, dashboard, lang_support) -> None:
     import time
     print("  Headless mode. Commands: <goal> | schedules | status | templates | quit\n")
-    _start_event_printer(agent._bus)
     try:
         while True:
             try:
@@ -450,9 +465,9 @@ def _run_headless(agent, persistence, scheduler, docs, dashboard, lang_support) 
                 english_goal, src_lang = lang_support.process_multilingual_goal(cmd)
                 if src_lang != "en":
                     print(f"  (Translated from {src_lang}): {english_goal}")
-                agent.set_goal(english_goal)
                 persistence.save(english_goal, agent.context_window)
                 docs.log_goal(english_goal)
+                _run_goal_with_feedback(agent, english_goal)
 
     except KeyboardInterrupt:
         pass
