@@ -350,9 +350,44 @@ def _load_skill_packs() -> None:
     pass
 
 
+def _start_event_printer(bus) -> None:
+    """Background thread that prints agent activity to the terminal."""
+    import threading, time
+
+    def _printer():
+        while True:
+            event = bus.consume(timeout=0.1)
+            if event is None:
+                continue
+            t = event.type
+            d = event.data
+            if t == "goal":
+                print(f"\n  [Agent] Goal accepted: {d}")
+                print(f"  [Agent] Thinking...\n")
+            elif t == "state_change":
+                if d in ("PERCEIVING", "THINKING", "ACTING", "LEARNING"):
+                    print(f"  [Agent] {d.lower().capitalize()}...", flush=True)
+            elif t == "thought":
+                # Show a short excerpt of the raw LLM reasoning
+                snippet = str(d)[:120].replace("\n", " ")
+                print(f"  [Thought] {snippet}")
+            elif t == "action":
+                status = "OK" if d.get("success") else "FAILED"
+                print(f"  [Action] {d.get('name')} -> {status}: {d.get('msg', '')[:80]}")
+            elif t == "done":
+                print(f"\n  [Agent] Goal complete: {d}\n")
+                print("Goal > ", end="", flush=True)
+            elif t == "error":
+                print(f"  [Error] {str(d)[:120]}")
+
+    t = threading.Thread(target=_printer, daemon=True, name="EventPrinter")
+    t.start()
+
+
 def _run_headless(agent, persistence, scheduler, docs, dashboard, lang_support) -> None:
     import time
     print("  Headless mode. Commands: <goal> | schedules | status | templates | quit\n")
+    _start_event_printer(agent._bus)
     try:
         while True:
             try:
